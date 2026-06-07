@@ -1,0 +1,119 @@
+import { useState } from "react";
+
+function App() {
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [style, setStyle] = useState("");
+  const [result, setResult] = useState(null);
+  const [saved, setSaved] = useState([]);
+
+  // ⭐ 코디 데이터 (이미지 포함)
+  const outfits = {
+    캐주얼: [
+      {
+        image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
+        items: ["오버핏 셔츠", "와이드 슬랙스", "미니멀 시계"],
+      },
+      {
+        image: "https://images.unsplash.com/photo-1516826957135-700dedea698c",
+        items: ["후디", "청바지", "스니커즈"],
+      },
+    ],
+  };
+
+  // ⭐ 추천 함수
+  const recommendOutfit = () => {
+    if (!style) {
+      alert("스타일을 선택해주세요!");
+      return;
+    }
+
+    const random =
+      outfits[style][Math.floor(Math.random() * outfits[style].length)];
+
+    setResult(random);
+  };
+
+  // ⭐ 저장
+  const saveOutfit = () => {
+    if (result) {
+      setSaved([...saved, result]);
+    }
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>AI 패션 코디 추천</h1>
+
+      {/* 입력 */}
+      <div>
+        <p>키</p>
+        <input
+          value={height}
+          onChange={(e) => setHeight(e.target.value)}
+        />
+
+        <p>몸무게</p>
+        <input
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
+
+        <p>스타일</p>
+        <select onChange={(e) => setStyle(e.target.value)}>
+          <option value="">선택</option>
+          <option value="캐주얼">캐주얼</option>
+        </select>
+
+        <br /><br />
+        <button onClick={recommendOutfit}>추천</button>
+      </div>
+
+      {/* 결과 */}
+      {result && (
+        <div>
+          <h2>추천 코디</h2>
+
+          {/* ⭐ 이미지 추가된 부분 */}
+          <img
+            src={result.image}
+            alt="코디 이미지"
+            style={{ width: "200px" }}
+          />
+
+          {/* 코디 텍스트 */}
+          <ul>
+            {result.items.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+
+          <button onClick={saveOutfit}>저장</button>
+        </div>
+      )}
+
+      {/* 저장된 코디 */}
+      <div>
+        <h2>저장된 코디</h2>
+        <p>저장된 코디 수: {saved.length}</p>
+
+        {saved.map((outfit, index) => (
+          <div key={index}>
+            <img
+              src={outfit.image}
+              alt="코디"
+              style={{ width: "150px" }}
+            />
+            <ul>
+              {outfit.items.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
